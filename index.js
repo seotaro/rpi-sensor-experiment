@@ -15,6 +15,11 @@ if (process.env.DS18B20) {
     const DS18B20 = require('./DS18B20');
     sensors.push(DS18B20);
 }
+if (process.env.NatureRemo) {
+    const NatureRemo = require('./NatureRemo');
+    sensors.push(NatureRemo);
+}
+
 
 console.log(`interval: ${process.env.INTERVAL} [ms], publish to: ${process.env.TOPIC}`);
 sensors.forEach(x => {
