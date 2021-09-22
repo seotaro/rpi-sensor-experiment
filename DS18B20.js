@@ -1,8 +1,5 @@
 'use strict';
 
-// const { PubSub } = require("@google-cloud/pubsub");
-// const pubsub = new PubSub();
-
 const os = require('os');
 const sensor = require('ds18b20-raspi');
 
