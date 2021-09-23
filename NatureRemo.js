@@ -19,6 +19,9 @@ exports.read = () => {
         },
     })
         .then(res => {
+            if (res.status !== 200) {
+                throw new Error(`response status is ${res.status}`);
+            }
             return res.text();
         })
         .then(text => {
