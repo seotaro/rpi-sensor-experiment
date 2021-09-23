@@ -29,6 +29,8 @@ exports.read = () => {
         })
         .then(json => {
             const record = { datetime: new Date(), devices: [] };
+
+            // API から返ってきた時刻にしているが、実際の計測時刻は各要素の created_at であることに注意。ハンドリングしづらい。
             json.forEach(device => {
                 const value = { id: `${device.id}` }
                 if (device.newest_events.te) {
@@ -43,7 +45,6 @@ exports.read = () => {
                 if (device.newest_events.mo) {
                     value.movement = device.newest_events.mo.val;
                 }
-
                 record.devices.push(value)
             })
             return record;
