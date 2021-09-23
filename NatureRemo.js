@@ -30,7 +30,7 @@ exports.read = () => {
         .then(json => {
             const record = { datetime: new Date(), devices: [] };
             json.forEach(device => {
-                const value = { id: `${os.hostname()}-natureremo-${device.id}` }
+                const value = { id: `${device.id}` }
                 if (device.newest_events.te) {
                     value.temperature = device.newest_events.te.val + device.temperature_offset;
                 }

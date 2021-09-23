@@ -1,6 +1,5 @@
 'use strict';
 
-const os = require('os');
 const BME280 = require('bme280-sensor');
 
 const options = {
@@ -22,7 +21,7 @@ exports.read = () => {
                 datetime: new Date(),
                 devices: [
                     {
-                        id: `${os.hostname()}-bme280-${Number(options.i2cAddress).toString(16)}`,
+                        id: `${Number(options.i2cAddress).toString(16)}`,
                         temperature: data.temperature_C,
                         humidity: data.humidity,
                         pressure: data.pressure_hPa
