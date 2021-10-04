@@ -1,12 +1,14 @@
 # ラズパイでセンサーの値を取得する
 
-実行
+## インストール
 
 ```bash
-node index.js
+yarn install
 ```
 
-設定をカレントディレクトリの .env に定義する。
+## 設定
+
+カレントディレクトリの .env に定義する。
 
 .env 例）
 
@@ -26,4 +28,10 @@ DS18B20=on
 # Nature Remo から取得する。
 NatureRemo=on
 NatureRemoToken=xxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+## 実行
+
+```bash
+node index.js
 ```
