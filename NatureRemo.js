@@ -48,8 +48,5 @@ exports.read = () => {
                 record.devices.push(value)
             })
             return record;
-        })
-        .catch((err) => {
-            console.error(`${err}`);
         });
 };
