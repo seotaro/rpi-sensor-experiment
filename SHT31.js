@@ -17,15 +17,13 @@ exports.read = () => {
         .then(data => {
             const record = {
                 datetime: new Date(),
-                devices: [
-                    {
-                        id: `${Number(sensor.address).toString(16)}`,
-                        temperature: data.temperature,
-                        humidity: data.humidity
-                    }
-                ]
+                device: `${Number(sensor.address).toString(16)}`,
+                values: {
+                    temperature: data.temperature,
+                    humidity: data.humidity
+                }
             };
 
-            return record;
+            return [record];
         });
 };
