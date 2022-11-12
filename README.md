@@ -2,6 +2,12 @@
 
 ## インストール
 
+I2C デバイスを使用する場合は i2c-tools をインストールする。
+
+```bash
+sudo apt-get install i2c-tools
+```
+
 ```bash
 yarn install
 ```

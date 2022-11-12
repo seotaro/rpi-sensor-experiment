@@ -21,11 +21,17 @@ exports.read = () => {
         });
     })
         .then(res => {
-            const record = { datetime: new Date(), devices: [] };
-            for (const device of res) {
-                record.devices.push({ id: `${device.id}`, temperature: device.t })
-            }
+            const datetime = new Date();
 
-            return record;
+            const records = [];
+            for (const device of res) {
+                const record = {
+                    datetime,
+                    device: `${os.hostname()}-ds18b20-${device.id}`,
+                    values: { temperature: device.t }
+                };
+                records.push(record);
+            }
+            return records;
         });
 };
