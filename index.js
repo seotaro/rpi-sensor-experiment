@@ -15,6 +15,10 @@ if (process.env.DS18B20 && (process.env.DS18B20 === 'on')) {
     const DS18B20 = require('./DS18B20');
     sensors.push(DS18B20);
 }
+if (process.env.SCD4X && (process.env.SCD4X === 'on')) {
+    const SCD4X = require('./SCD4X');
+    sensors.push(SCD4X);
+}
 if (process.env.NatureRemo && (process.env.NatureRemo === 'on')) {
     const NatureRemo = require('./NatureRemo');
     sensors.push(NatureRemo);

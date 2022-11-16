@@ -5,7 +5,7 @@
 I2C デバイスを使用する場合は i2c-tools をインストールする。
 
 ```bash
-sudo apt-get install i2c-tools
+sudo apt install i2c-tools
 ```
 
 ```bash
@@ -41,3 +41,16 @@ NatureRemoToken=xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```bash
 node index.js
 ```
+
+
+## その他
+
+I2C デバイスの確認
+
+```bash
+i2cdetect -y 1
+```
+
+## 参考
+[data sheet](https://d2air1d4eqhwg2.cloudfront.net/media/files/262fda6e-3a57-4326-b93d-a9d627defdc4.pdf)
+[Sensirion/raspberry-pi-i2c-scd4x](https://github.com/Sensirion/raspberry-pi-i2c-scd4x#connecting-the-sensor)
