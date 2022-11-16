@@ -15,7 +15,7 @@ exports.read = async () => {
         .then(data => {
             const record = {
                 datetime: new Date(),
-                device: 'SCD4X',
+                device: scd4x.serialNumber,
                 values: {
                     co2: data.co2,
                     temperature: data.temperature,

@@ -27,6 +27,7 @@ class SCD4X {
 
   constructor() {
     this.bus = null;
+    this.serialNumber = null;
   }
 
   initialize() {
@@ -36,6 +37,10 @@ class SCD4X {
         return this.stopPeriodicMeasurement();
       })
       .then(() => {
+        return this.getSerialNumber();
+      })
+      .then(res => {
+        this.serialNumber = res;
         return sleep(1000);
       })
       .then(() => {
@@ -53,6 +58,16 @@ class SCD4X {
     return this.bus.i2cWrite(SCD4X.ADDRESS, SCD4X.COMMAND_LENGTH, toBuffer(command))
       .then(() => {
         return this.bus.i2cRead(SCD4X.ADDRESS, buf.length, buf)
+      })
+  }
+
+  getSerialNumber() {
+    return this.read(SCD4X.GET_SERIAL_NUMBER_COMMAND, 9)
+      .then(res => {
+        const buf = res.buffer;
+        return buf.readUInt16BE(0).toString(16) +
+          buf.readUInt16BE(3).toString(16) +
+          buf.readUInt16BE(6).toString(16);
       })
   }
 
