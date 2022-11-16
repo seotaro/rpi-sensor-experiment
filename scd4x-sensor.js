@@ -33,8 +33,7 @@ class SCD4X {
       .then(() => {
         return this.#getSerialNumber();
       })
-      .then(res => {
-        this.#serialNumber = res;
+      .then(() => {
         return this.#startPeriodicMeasurement();
       })
   }
@@ -63,12 +62,14 @@ class SCD4X {
   #getSerialNumber() {
     return this.#read(SCD4X.#GET_SERIAL_NUMBER_COMMAND, 9)
       .then(res => {
+        this.#serialNumber = '';
+
         const buf = res.buffer;
-        return buf.readUInt16BE(0).toString(16) +
-          buf.readUInt16BE(3).toString(16) +
-          buf.readUInt16BE(6).toString(16);
-      })
-      .then(() => {
+        const values = [buf.readUInt16BE(0), buf.readUInt16BE(3), buf.readUInt16BE(6)];
+        values.forEach(value => {
+          this.#serialNumber += value.toString(16);
+        })
+
         return setTimeout(10);
       })
   }
