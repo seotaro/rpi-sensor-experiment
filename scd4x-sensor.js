@@ -1,29 +1,18 @@
 'use strict';
 
 const i2c = require('i2c-bus');
-
-const toBuffer = (command) => {
-  return Buffer.from([command >> 8, command & 0xff])
-}
-
-const sleep = (time) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve()
-    }, time)
-  })
-}
+const { setTimeout } = require('timers/promises');
 
 class SCD4X {
-  static ADDRESS = 0x62;
+  static #ADDRESS = 0x62;
 
   // コマンド定義
-  static START_PERIODIC_MEASUREMENT_COMMAND = 0x21b1;
-  static READ_MEASUREMENT_COMMAND = 0xec05;
-  static STOP_PERIODIC_MEASUREMENT_COMMAND = 0x3f86;
-  static GET_SERIAL_NUMBER_COMMAND = 0x3682;
+  static #START_PERIODIC_MEASUREMENT_COMMAND = 0x21b1;
+  static #READ_MEASUREMENT_COMMAND = 0xec05;
+  static #STOP_PERIODIC_MEASUREMENT_COMMAND = 0x3f86;
+  static #GET_SERIAL_NUMBER_COMMAND = 0x3682;
 
-  static COMMAND_LENGTH = 2;
+  static #COMMAND_LENGTH = 2;
 
   #bus;
   #serialNumber;
@@ -39,36 +28,40 @@ class SCD4X {
     return i2c.openPromisified(1)
       .then(bus => {
         this.#bus = bus;
-        return this.stopPeriodicMeasurement();
+        return this.#stopPeriodicMeasurement();
       })
       .then(() => {
-        return this.getSerialNumber();
+        return this.#getSerialNumber();
       })
       .then(res => {
         this.#serialNumber = res;
-        return this.startPeriodicMeasurement();
+        return this.#startPeriodicMeasurement();
       })
   }
 
   readSensorData() {
-    return this.readMeasurement()
+    return this.#readMeasurement()
   }
 
-  sendCommand(command) {
-    return this.#bus.i2cWrite(SCD4X.ADDRESS, SCD4X.COMMAND_LENGTH, toBuffer(command));
+  static #toBuffer(command) {
+    return Buffer.from([command >> 8, command & 0xff])
   }
 
-  read(command, bufferLength) {
+  #sendCommand(command) {
+    return this.#bus.i2cWrite(SCD4X.#ADDRESS, SCD4X.#COMMAND_LENGTH, SCD4X.#toBuffer(command));
+  }
+
+  #read(command, bufferLength) {
     const buf = Buffer.alloc(bufferLength);
 
-    return this.#bus.i2cWrite(SCD4X.ADDRESS, SCD4X.COMMAND_LENGTH, toBuffer(command))
+    return this.#bus.i2cWrite(SCD4X.#ADDRESS, SCD4X.#COMMAND_LENGTH, SCD4X.#toBuffer(command))
       .then(() => {
-        return this.#bus.i2cRead(SCD4X.ADDRESS, buf.length, buf)
+        return this.#bus.i2cRead(SCD4X.#ADDRESS, buf.length, buf)
       })
   }
 
-  getSerialNumber() {
-    return this.read(SCD4X.GET_SERIAL_NUMBER_COMMAND, 9)
+  #getSerialNumber() {
+    return this.#read(SCD4X.#GET_SERIAL_NUMBER_COMMAND, 9)
       .then(res => {
         const buf = res.buffer;
         return buf.readUInt16BE(0).toString(16) +
@@ -76,20 +69,20 @@ class SCD4X {
           buf.readUInt16BE(6).toString(16);
       })
       .then(() => {
-        return sleep(10);
+        return setTimeout(10);
       })
   }
 
-  startPeriodicMeasurement() {
-    return this.sendCommand(SCD4X.START_PERIODIC_MEASUREMENT_COMMAND);
+  #startPeriodicMeasurement() {
+    return this.#sendCommand(SCD4X.#START_PERIODIC_MEASUREMENT_COMMAND);
   }
 
-  readMeasurement() {
+  #readMeasurement() {
     const toCO2 = (value => value);
     const toTemperature = (value => -45 + 175 * value / 65536)
     const toHumidity = (value => 100 * value / 65536)
 
-    return this.read(SCD4X.READ_MEASUREMENT_COMMAND, 9)
+    return this.#read(SCD4X.#READ_MEASUREMENT_COMMAND, 9)
       .then(res => {
         return {
           co2: toCO2(res.buffer.readUInt16BE(0)),
@@ -99,10 +92,10 @@ class SCD4X {
       })
   }
 
-  stopPeriodicMeasurement() {
-    return this.sendCommand(SCD4X.STOP_PERIODIC_MEASUREMENT_COMMAND)
+  #stopPeriodicMeasurement() {
+    return this.#sendCommand(SCD4X.#STOP_PERIODIC_MEASUREMENT_COMMAND)
       .then(() => {
-        return sleep(1000);
+        return setTimeout(1000);
       })
   }
 }
