@@ -11,7 +11,7 @@ exports.initialize = () => {
 
 exports.read = async () => {
     // インターバル 5[s]未満はエラーになることに注意
-    return scd4x.readMeasurement()
+    return scd4x.readSensorData()
         .then(data => {
             const record = {
                 datetime: new Date(),

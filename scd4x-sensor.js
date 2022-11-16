@@ -46,11 +46,12 @@ class SCD4X {
       })
       .then(res => {
         this.#serialNumber = res;
-        return sleep(1000);
-      })
-      .then(() => {
         return this.startPeriodicMeasurement();
       })
+  }
+
+  readSensorData() {
+    return this.readMeasurement()
   }
 
   sendCommand(command) {
@@ -74,6 +75,9 @@ class SCD4X {
           buf.readUInt16BE(3).toString(16) +
           buf.readUInt16BE(6).toString(16);
       })
+      .then(() => {
+        return sleep(10);
+      })
   }
 
   startPeriodicMeasurement() {
@@ -96,7 +100,10 @@ class SCD4X {
   }
 
   stopPeriodicMeasurement() {
-    return this.sendCommand(SCD4X.STOP_PERIODIC_MEASUREMENT_COMMAND);
+    return this.sendCommand(SCD4X.STOP_PERIODIC_MEASUREMENT_COMMAND)
+      .then(() => {
+        return sleep(1000);
+      })
   }
 }
 
