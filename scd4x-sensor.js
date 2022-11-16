@@ -25,22 +25,27 @@ class SCD4X {
 
   static COMMAND_LENGTH = 2;
 
+  #bus;
+  #serialNumber;
+
   constructor() {
-    this.bus = null;
-    this.serialNumber = null;
+    this.#bus = null;
+    this.#serialNumber = null;
   }
+
+  get serialNumber() { return this.#serialNumber; }
 
   initialize() {
     return i2c.openPromisified(1)
       .then(bus => {
-        this.bus = bus;
+        this.#bus = bus;
         return this.stopPeriodicMeasurement();
       })
       .then(() => {
         return this.getSerialNumber();
       })
       .then(res => {
-        this.serialNumber = res;
+        this.#serialNumber = res;
         return sleep(1000);
       })
       .then(() => {
@@ -49,15 +54,15 @@ class SCD4X {
   }
 
   sendCommand(command) {
-    return this.bus.i2cWrite(SCD4X.ADDRESS, SCD4X.COMMAND_LENGTH, toBuffer(command));
+    return this.#bus.i2cWrite(SCD4X.ADDRESS, SCD4X.COMMAND_LENGTH, toBuffer(command));
   }
 
   read(command, bufferLength) {
     const buf = Buffer.alloc(bufferLength);
 
-    return this.bus.i2cWrite(SCD4X.ADDRESS, SCD4X.COMMAND_LENGTH, toBuffer(command))
+    return this.#bus.i2cWrite(SCD4X.ADDRESS, SCD4X.COMMAND_LENGTH, toBuffer(command))
       .then(() => {
-        return this.bus.i2cRead(SCD4X.ADDRESS, buf.length, buf)
+        return this.#bus.i2cRead(SCD4X.ADDRESS, buf.length, buf)
       })
   }
 
