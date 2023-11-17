@@ -28,7 +28,7 @@ INTERVAL=60000
 DS18B20=on
 SHT31=on
 BME280=on
-SCD4x=on
+SCD4X=on
 
 NatureRemo=on
 NatureRemoToken=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
