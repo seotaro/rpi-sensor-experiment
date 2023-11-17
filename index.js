@@ -29,27 +29,39 @@ sensors.forEach(x => {
     console.log(`${x.name()}: use`);
 })
 
-const initialize = async (sensors) => {
-    for (const sensor of sensors) {
-        await sensor.initialize()
-            .then(() => {
-                console.log(`${sensor.name()}: initialization succeeded`);
-            })
-            .catch(err => console.error(`${sensor.name()}: initialization failed: ${err} `));
-    }
-};
-
-const read = async (sensors) => {
-    for (const sensor of sensors) {
-        await sensor.read()
-            .then(records => {
-                console.log(`${sensor.name()}: read\n`, records, '\n');
-            })
-            .catch(err => {
-                console.log(`${sensor.name()}: read error ${err}`);
+const initialize = (sensors) => {
+    return Promise.allSettled(sensors.map((sensor) => { return sensor.initialize() }))
+        .then(results => {
+            results.forEach((result, i) => {
+                if (result.status !== 'fulfilled') {
+                    console.error(`${sensors[i].name()}: initialization failed: ${result.reason} `);
+                }
             });
-    }
+        });
+
 };
 
-initialize(sensors);
-setInterval(() => { read(sensors) }, process.env.INTERVAL);
+const read = (sensors) => {
+    return Promise.allSettled(sensors.map((sensor) => { return sensor.read() }))
+        .then(results => {
+            const records = [];
+            results.forEach((result, i) => {
+                if (result.status === 'fulfilled') {
+                    records.push(...result.value);
+                }
+            });
+
+            return records;
+        });
+};
+
+(async () => {
+    await initialize(sensors);
+
+    setInterval(async () => {
+        const records = await read(sensors)
+        records.forEach(record => {
+            console.log(record);
+        });
+    }, process.env.INTERVAL);
+})();
