@@ -9,7 +9,7 @@ exports.initialize = () => {
     return scd4x.initialize();
 }
 
-exports.read = async () => {
+exports.read = () => {
     // インターバル 5[s]未満はエラーになることに注意
     return scd4x.readSensorData()
         .then(data => {
