@@ -1,5 +1,6 @@
 'use strict';
 
+const os = require('os');
 const sensor = require('ds18b20-raspi');
 
 exports.name = () => 'DS18B20';
