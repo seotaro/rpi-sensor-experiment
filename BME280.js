@@ -19,7 +19,7 @@ exports.read = () => {
         .then(data => {
             const record = {
                 datetime: new Date(),
-                device: `${Number(options.i2cAddress).toString(16)}`,
+                device: Number(options.i2cAddress).toString(16),
                 values: {
                     temperature: data.temperature_C,
                     humidity: data.humidity,

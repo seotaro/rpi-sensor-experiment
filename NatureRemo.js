@@ -33,7 +33,7 @@ exports.read = () => {
             json.forEach(device => {
                 const record = {
                     datetime: new Date(device.created_at),
-                    device: `${device.id}`,
+                    device: device.id,
                     values: {}
                 };
 

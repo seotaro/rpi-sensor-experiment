@@ -17,7 +17,7 @@ exports.read = () => {
         .then(data => {
             const record = {
                 datetime: new Date(),
-                device: `${Number(sensor.address).toString(16)}`,
+                device: Number(sensor.address).toString(16),
                 values: {
                     temperature: data.temperature,
                     humidity: data.humidity

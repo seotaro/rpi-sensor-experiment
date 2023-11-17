@@ -1,6 +1,5 @@
 'use strict';
 
-const os = require('os');
 const sensor = require('ds18b20-raspi');
 
 exports.name = () => 'DS18B20';
@@ -28,7 +27,7 @@ exports.read = () => {
             for (const device of res) {
                 const record = {
                     datetime,
-                    device: `${os.hostname()}-ds18b20-${device.id}`,
+                    device: device.id,
                     values: { temperature: device.t }
                 };
                 records.push(record);
