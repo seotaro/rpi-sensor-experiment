@@ -28,25 +28,31 @@ exports.read = () => {
             return JSON.parse(text);
         })
         .then(json => {
-            const record = { datetime: new Date(), devices: [] };
+            const records = [];
 
-            // API から返ってきた時刻にしているが、実際の計測時刻は各要素の created_at であることに注意。ハンドリングしづらい。
             json.forEach(device => {
-                const value = { id: `${device.id}` }
+                const record = {
+                    datetime: new Date(device.created_at),
+                    device: `${device.id}`,
+                    values: {}
+                };
+
                 if (device.newest_events.te) {
-                    value.temperature = device.newest_events.te.val + device.temperature_offset;
+                    record.values.temperature = device.newest_events.te.val + device.temperature_offset;
                 }
                 if (device.newest_events.hu) {
-                    value.humidity = device.newest_events.hu.val + device.humidity_offset;
+                    record.values.humidity = device.newest_events.hu.val + device.humidity_offset;
                 }
                 if (device.newest_events.il) {
-                    value.illumination = device.newest_events.il.val;
+                    record.values.illumination = device.newest_events.il.val;
                 }
                 if (device.newest_events.mo) {
-                    value.movement = device.newest_events.mo.val;
+                    record.values.movement = device.newest_events.mo.val;
                 }
-                record.devices.push(value)
+
+                records.push(record)
             })
-            return record;
+
+            return records;
         });
 };
