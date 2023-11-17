@@ -23,6 +23,10 @@ if (process.env.NatureRemo && (process.env.NatureRemo === 'on')) {
     const NatureRemo = require('./NatureRemo');
     sensors.push(NatureRemo);
 }
+if (process.env.SwitchBot && (process.env.SwitchBot === 'on')) {
+    const SwitchBot = require('./SwitchBot');
+    sensors.push(SwitchBot);
+}
 
 console.log(`interval: ${process.env.INTERVAL} [ms]`);
 sensors.forEach(x => {
